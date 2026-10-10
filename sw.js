@@ -1,0 +1,12 @@
+'use strict';
+const BUILD='8e1a5c4521597d3b',PREFIX='stitchcraft-iphone:'+self.registration.scope+':',CACHE=PREFIX+BUILD;
+const FILES=['./index.html','./mobile.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png','./setup.html'];
+const urls=FILES.map(path=>new URL(path,self.registration.scope).href);
+self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(CACHE);try{await cache.addAll(urls.map(url=>new Request(url,{cache:'reload'})));}catch(error){await caches.delete(CACHE);throw error;}})());});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const names=await caches.keys();await Promise.all(names.filter(name=>name.startsWith(PREFIX)&&name!==CACHE).map(name=>caches.delete(name)));await self.clients.claim();})());});
+self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const url=new URL(event.request.url),scope=new URL(self.registration.scope);if(url.origin!==scope.origin||!url.pathname.startsWith(scope.pathname))return;
+ const target=event.request.mode==='navigate'&&(url.pathname===scope.pathname||url.pathname===scope.pathname+'index.html')?new URL('./index.html',scope).href:urls.find(item=>new URL(item).pathname===url.pathname);
+ if(!target)return;
+ event.respondWith((async()=>{const cache=await caches.open(CACHE),saved=await cache.match(target);if(saved)return saved;const response=await fetch(target,{cache:'no-cache'});if(response.ok)await cache.put(target,response.clone());return response;})());
+});
+self.addEventListener('message',event=>{if(event.data?.type==='ACTIVATE_UPDATE')event.waitUntil(self.skipWaiting());if(event.data?.type==='CHECK_OFFLINE')event.waitUntil((async()=>{const cache=await caches.open(CACHE),entries=await Promise.all(urls.map(url=>cache.match(url)));event.ports[0]?.postMessage({ready:entries.every(Boolean),build:BUILD});})());});
