@@ -1,14 +1,29 @@
 {
   "id": "./",
-  "name": "StitchCraft",
+  "name": "StitchCraft Studio",
   "short_name": "StitchCraft",
-  "description": "Offline crochet patterns, project progress and assembly guidance.",
+  "description": "Offline amigurumi pattern studio with pattern generation, project progress, finishing guides and backups.",
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
   "background_color": "#fffdfa",
   "theme_color": "#654878",
+  "categories": [
+    "lifestyle",
+    "productivity"
+  ],
   "icons": [
+    {
+      "src": "./icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "./icon-192.png",
       "sizes": "192x192",

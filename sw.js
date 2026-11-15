@@ -1,5 +1,5 @@
 'use strict';
-const BUILD='8e1a5c4521597d3b',PREFIX='stitchcraft-iphone:'+self.registration.scope+':',CACHE=PREFIX+BUILD;
+const BUILD='2be4e666a4a993f6',PREFIX='stitchcraft-iphone:'+self.registration.scope+':',CACHE=PREFIX+BUILD;
 const FILES=['./index.html','./mobile.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png','./setup.html'];
 const urls=FILES.map(path=>new URL(path,self.registration.scope).href);
 self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(CACHE);try{await cache.addAll(urls.map(url=>new Request(url,{cache:'reload'})));}catch(error){await caches.delete(CACHE);throw error;}})());});
